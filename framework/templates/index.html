@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Pipeline Interface</title>
+</head>
+<body>
+    <h1>RAG Pipeline Interface</h1>
+    <form method="POST">
+        <label for="query">Enter your query:</label>
+        <input type="text" id="query" name="query" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if query %}
+    <div class="results">
+        <h2>Query:</h2>
+        <p>{{ query }}</p>
+
+        <h2>Generated Embedding:</h2>
+        <p>{{ embedding }}</p>
+
+        <h2>Search Results:</h2>
+        <ul>
+            {% for result in search_results %}
+            <li>{{ result.payload.content }} (Score: {{ result.score }})</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Top Document:</h2>
+        <p>{{ top_document }}</p>
+
+        <h2>Final Answer:</h2>
+        <p>{{ final_answer }}</p>
+    </div>
+    {% endif %}
+</body>
+</html>

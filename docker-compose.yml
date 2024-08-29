@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  framework:
+    build: ./framework
+    ports:
+      - "5000:5000"
+    depends_on:
+      - embedding_model
+      - vector_db
+      - llm
+
+  embedding_model:
+    build: ./embedding_model
+    ports:
+      - "5002:5002"
+
+  vector_db:
+    build: ./vector_db
+    ports:
+      - "5001:5001"
+
+  llm:
+    build: ./llm
+    ports:
+      - "5003:5003"
