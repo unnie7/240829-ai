@@ -1,20 +1,25 @@
 from flask import Flask, request, jsonify
-from transformers import AutoModel, AutoTokenizer
-import torch
+import requests
 
 app = Flask(__name__)
 
-# Load the embedding model
-tokenizer = AutoTokenizer.from_pretrained("e5-mistral-7b")
-model = AutoModel.from_pretrained("e5-mistral-7b")
+@app.route('/query', methods=['POST'])
+def query():
+    data = request.json
+    query_text = data['query']
 
-@app.route('/embed', methods=['POST'])
-def embed():
-    text = request.json['text']
-    inputs = tokenizer(text, return_tensors="pt")
-    with torch.no_grad():
-        embeddings = model(**inputs).last_hidden_state
-    return jsonify(embeddings.numpy().tolist())
+    # Get embeddings from embedding model
+    embedding_response = requests.post('http://embedding_model:5000/embed', json={"sentences": [query_text]})
+    embeddings = embedding_response.json()
+
+    # Query vector DB
+    vector_response = requests.post('http://vector_db:6333/collections/test_collection/points/search', json={
+        "vector": embeddings[0],
+        "top": 5
+    })
+    results = vector_response.json()
+
+    return jsonify(results)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5002)
+    app.run(host='0.0.0.0', port=5000)

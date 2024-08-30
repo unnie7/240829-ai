@@ -1,27 +1,25 @@
+import requests
 from qdrant_client import QdrantClient
-from qdrant_client.http import models
-import numpy as np
+from qdrant_client.http.models import PointStruct
 
-# Connect to the Qdrant service
+# Initialize Qdrant client
 client = QdrantClient(host="localhost", port=6333)
 
-# Initialize the collection with vector embeddings
+# Sample data for initialization
+points = [
+    PointStruct(id=1, vector=[0.1, 0.2, 0.3], payload={"text": "Hello world"}),
+    PointStruct(id=2, vector=[0.4, 0.5, 0.6], payload={"text": "Hi there"})
+]
+
+# Create a collection
 client.recreate_collection(
-    collection_name="my_vectors",
-    vectors_config=models.VectorParams(
-        size=768,  # The dimension of your vectors
-        distance=models.Distance.COSINE
-    )
+    collection_name="test_collection",
+    vector_size=3,
+    distance="Cosine"
 )
 
-# Sample data to populate the database
-sample_vectors = np.random.rand(10, 768).tolist()  # Random sample vectors
-sample_payload = [{"doc_id": f"doc_{i}", "content": f"Sample document {i}"} for i in range(10)]
-
-# Upload sample vectors
-client.upload_collection(
-    collection_name="my_vectors",
-    vectors=sample_vectors,
-    payload=sample_payload,
-    ids=None
+# Upload points
+client.upsert(
+    collection_name="test_collection",
+    points=points
 )

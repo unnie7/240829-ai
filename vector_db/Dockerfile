@@ -1,6 +1,20 @@
+# Base image
 FROM python:3.9-slim
+
+# Set work directory
 WORKDIR /app
+
+# Copy requirements file
+COPY requirements.txt /app/
+
+# Install dependencies
+RUN pip install --no-cache-dir --default-timeout=100 -r requirements.txt
+
+# Copy application files
 COPY . /app
-RUN pip install --no-cache-dir -r requirements.txt
-EXPOSE 5001
-CMD ["python", "app.py"]
+
+# Expose port
+EXPOSE 6333
+
+# Run the application
+CMD ["python", "init_db.py"]
