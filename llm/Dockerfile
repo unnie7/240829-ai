@@ -1,20 +1,13 @@
-# Base image
-FROM python:3.9-slim
+FROM python:3.9
 
-# Set work directory
 WORKDIR /app
 
-# Copy requirements file
-COPY requirements.txt /app/
-
-# Install dependencies
-RUN pip install --no-cache-dir --default-timeout=100 -r requirements.txt
-
-# Copy application files
 COPY . /app
+COPY ../packages /packages
+COPY ../models/kogpt2 /models/llm
 
-# Expose port
-EXPOSE 5000
+RUN pip install --no-index --find-links /packages -r requirements.txt
 
-# Run the application
+EXPOSE 8003
+
 CMD ["python", "app.py"]

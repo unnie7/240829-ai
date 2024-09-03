@@ -19,7 +19,27 @@
 
 ## 소스코드 구조
 
-rag-simple-pipeline/ ├── embedding_model/ │ ├── app.py │ ├── Dockerfile │ └── requirements.txt ├── vector_db/ │ ├── app.py │ ├── init_db.py │ ├── Dockerfile │ └── requirements.txt ├── framework/ │ ├── app.py │ ├── Dockerfile │ └── requirements.txt ├── llm/ │ ├── app.py │ ├── Dockerfile │ └── requirements.txt ├── docker-compose.yml └── README.md
+rag-simple-pipeline/
+├── embedding_model/
+│   ├── app.py
+│   ├── Dockerfile
+│   └── requirements.txt
+├── vector_db/
+│   ├── app.py
+│   ├── init_db.py
+│   ├── Dockerfile
+│   └── requirements.txt
+├── framework/
+│   ├── app.py
+│   ├── Dockerfile
+│   └── requirements.txt
+├── llm/
+│   ├── app.py
+│   ├── Dockerfile
+│   └── requirements.txt
+├── docker-compose.yml
+└── README.md
+
 
 
 ## 설정 및 설치

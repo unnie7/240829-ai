@@ -1,25 +1,15 @@
+from sentence_transformers import SentenceTransformer
 from flask import Flask, request, jsonify
-import requests
 
 app = Flask(__name__)
+model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
-@app.route('/query', methods=['POST'])
-def query():
+@app.route('/embed', methods=['POST'])
+def embed_text():
     data = request.json
-    query_text = data['query']
+    text = data['text']
+    embedding = model.encode(text).tolist()
+    return jsonify({'embedding': embedding})
 
-    # Get embeddings from embedding model
-    embedding_response = requests.post('http://embedding_model:5000/embed', json={"sentences": [query_text]})
-    embeddings = embedding_response.json()
-
-    # Query vector DB
-    vector_response = requests.post('http://vector_db:6333/collections/test_collection/points/search', json={
-        "vector": embeddings[0],
-        "top": 5
-    })
-    results = vector_response.json()
-
-    return jsonify(results)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=8000)

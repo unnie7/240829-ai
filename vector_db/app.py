@@ -1,35 +1,19 @@
-from flask import Flask, request, jsonify
 from qdrant_client import QdrantClient
-import numpy as np
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
-
-# Connect to the Qdrant service
-client = QdrantClient(host="localhost", port=6333)
-
-@app.route('/store_vector', methods=['POST'])
-def store_vector():
-    data = request.json
-    vector = data['vector']
-    payload = data.get('payload', {})
-    
-    response = client.upsert(
-        collection_name="my_vectors",
-        points=[models.PointStruct(id=payload.get('doc_id', None), vector=vector, payload=payload)]
-    )
-    
-    return jsonify({"status": "success", "response": response})
+client = QdrantClient(host='localhost', port=6333)
 
 @app.route('/search', methods=['POST'])
 def search():
-    query_vector = request.json['vector']
-    results = client.search(
-        collection_name="my_vectors",
+    data = request.json
+    query_vector = data['vector']
+    search_result = client.search(
+        collection_name="bank_service",
         query_vector=query_vector,
-        limit=5  # Return top 5 results
+        limit=3
     )
-    return jsonify({"results": results})
+    return jsonify(search_result)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
-
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=8001)
