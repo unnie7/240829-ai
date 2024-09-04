@@ -1,1 +1,0 @@
-print("All models and packages are downloaded.")
